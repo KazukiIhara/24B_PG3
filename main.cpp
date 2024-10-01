@@ -1,54 +1,75 @@
 #include <stdio.h>
 #include <iostream>
+#include <ctime>
+#include <thread>
+#include <functional>
+#include <random>
 
-// 時給
-const int kHourlyPay = 1072;
+typedef void (*PFunc)(bool);
 
-template <typename T>
-T Min(T a, T b) {
-	if (a < b) {
-		return static_cast<T>(a);
-	} else if (b < a) {
-		return static_cast<T>(b);
+int RollDice(std::mt19937& gen) {
+	std::uniform_int_distribution<> dist(1, 6);
+	return dist(gen);
+}
+
+void SetTimeout(PFunc p, int second, bool result) {
+	std::cout << "判定中";
+	for (size_t i = 0; i < second; i++) {
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		std::cout << ".";
+	}
+	std::cout << std::endl;
+	p(result);
+}
+
+bool CheckResult(int dice, int input) {
+	switch (input) {
+	case 0:
+		if (dice % 2) {
+			return true;
+		} else {
+			return false;
+		}
+		break;
+	case 1:
+		if (dice % 2) {
+			return false;
+		} else {
+			return true;
+		}
+		break;
+	default:
+		std::cout << "0か1を入力してください" << std::endl;
+		return false;
+		break;
+	}
+}
+
+void DispResult(bool result) {
+	if (result) {
+		std::cout << "正解！";
 	} else {
-		printf("SameNumbers");
-		return static_cast<T>(a);
+		std::cout << "残念...";
 	}
-}
-
-template <>
-char Min<char>(char a, char b) {
-	printf("数字以外は代入できません");
-	return a;
-}
-
-// 再帰的な賃金を計算する関数
-int recursiveWage(int hour) {
-	if (hour == 1) {
-		return 100;
-	} else {
-		return recursiveWage(hour - 1) * 2 - 50;
-	}
-}
-
-// 一般的な賃金体系と再帰的な賃金体系を比較する関数
-void compareWages(int hours) {
-	int generalWage = 1072 * hours;
-	int recursiveTotalWage = 0;
-
-	for (int hour = 1; hour <= hours; ++hour) {
-		recursiveTotalWage += recursiveWage(hour);
-	}
-	std::cout << "勤務時間: " << hours << "時間" << std::endl;
-	std::cout << "一般的な賃金体系での総賃金: " << generalWage << "円" << std::endl;
-	std::cout << "再帰的な賃金体系での総賃金: " << recursiveTotalWage << "円" << std::endl;
 }
 
 int main() {
-	int hours = 1;  // 例として8時間働く場合
-	for (hours = 0; hours <= 8; hours++) {
-		compareWages(hours);
-	}
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	int dice = RollDice(gen);
+
+	std::cout << dice << std::endl;
+	std::cout << "ダイスが振られました" << std::endl << "奇数(0)か偶数(1)かを当ててください" << std::endl;
+	std::cout << "入力: ";
+	int input;
+	std::cin >> input;
+
+	PFunc p;
+	p = DispResult;
+
+	SetTimeout(p, 3, CheckResult(dice, input));
 
 	return 0;
 }
