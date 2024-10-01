@@ -66,10 +66,14 @@ int main() {
 	int input;
 	std::cin >> input;
 
+	auto checkResult = [&]() {
+		return CheckResult(dice, input);
+		};
+
 	PFunc p;
 	p = DispResult;
 
-	SetTimeout(p, 3, CheckResult(dice, input));
+	SetTimeout(p, 3, checkResult());
 
 	return 0;
 }
