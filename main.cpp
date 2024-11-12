@@ -1,43 +1,58 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <cmath>
+#include <numbers>
 
-class Animal {
+class IShape {
 public:
-    virtual void makeSound() const = 0;
-    virtual ~Animal() = default;
+	virtual void Size() = 0;
+	virtual void Draw() = 0;
+protected:
+	float area = 0.0f;
 };
 
-class Dog : public Animal {
+class Circle: public IShape {
 public:
-    void makeSound() const override {
-        std::cout << "ワンワン" << std::endl;
-    }
+	Circle(double radius) : radius(radius) {}
+
+	void Size() override {
+		area = std::numbers::pi_v<float> * radius * radius;
+	}
+
+	void Draw() override {
+		std::cout << "Circle Area: " << area << std::endl;
+	}
+
+private:
+	float radius;  // 半径
 };
 
-class Cat : public Animal {
+class Rectangle: public IShape {
 public:
-    void makeSound() const override {
-        std::cout << "ニャーニャー" << std::endl;
-    }
-};
+	Rectangle(float width, float height) : width(width), height(height) {}
 
-class Cow : public Animal {
-public:
-    void makeSound() const override {
-        std::cout << "モーモー" << std::endl;
-    }
+	void Size() override {
+		area = width * height;
+	}
+
+	void Draw() override {
+		std::cout << "Rectangle Area: " << area << std::endl;
+	}
+
+private:
+	float width, height;
 };
 
 int main() {
-    std::vector<std::unique_ptr<Animal>> animals;
-    animals.push_back(std::make_unique<Dog>());
-    animals.push_back(std::make_unique<Cat>());
-    animals.push_back(std::make_unique<Cow>());
+	std::vector<std::shared_ptr<IShape>> shapes;
+	shapes.push_back(std::make_shared<Circle>(5.0));
+	shapes.push_back(std::make_shared<Rectangle>(4.0, 6.0));
 
-    for (const auto& animal : animals) {
-        animal->makeSound();
-    }
+	for (auto& shape : shapes) {
+		shape->Size();
+		shape->Draw();
+	}
 
-    return 0;
+	return 0;
 }
