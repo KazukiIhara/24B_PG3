@@ -1,41 +1,43 @@
+#include <iostream>
+#include <vector>
 #include <memory>
 
-#include <iostream>
-
-template <typename Type>
-class Compare {
+class Animal {
 public:
-    Compare(Type a, Type b) : value1(a), value2(b) {}
+    virtual void makeSound() const = 0;
+    virtual ~Animal() = default;
+};
 
-    Type Min() const {
-        return (value1 < value2) ? value1 : value2;
+class Dog : public Animal {
+public:
+    void makeSound() const override {
+        std::cout << "ワンワン" << std::endl;
     }
+};
 
-private:
-    Type value1;
-    Type value2;
+class Cat : public Animal {
+public:
+    void makeSound() const override {
+        std::cout << "ニャーニャー" << std::endl;
+    }
+};
+
+class Cow : public Animal {
+public:
+    void makeSound() const override {
+        std::cout << "モーモー" << std::endl;
+    }
 };
 
 int main() {
-    // int 型のインスタンス
-    Compare<int> intCompare1(3, 5);
-    Compare<int> intCompare2(10, 2);
+    std::vector<std::unique_ptr<Animal>> animals;
+    animals.push_back(std::make_unique<Dog>());
+    animals.push_back(std::make_unique<Cat>());
+    animals.push_back(std::make_unique<Cow>());
 
-    // float 型のインスタンス
-    Compare<float> floatCompare1(3.5f, 7.8f);
-    Compare<float> floatCompare2(9.1f, 1.4f);
-
-    // double 型のインスタンス
-    Compare<double> doubleCompare1(4.2, 2.3);
-    Compare<double> doubleCompare2(8.5, 10.1);
-
-    // Min関数の結果を表示
-    std::cout << "intCompare1.Min(): " << intCompare1.Min() << std::endl;
-    std::cout << "intCompare2.Min(): " << intCompare2.Min() << std::endl;
-    std::cout << "floatCompare1.Min(): " << floatCompare1.Min() << std::endl;
-    std::cout << "floatCompare2.Min(): " << floatCompare2.Min() << std::endl;
-    std::cout << "doubleCompare1.Min(): " << doubleCompare1.Min() << std::endl;
-    std::cout << "doubleCompare2.Min(): " << doubleCompare2.Min() << std::endl;
+    for (const auto& animal : animals) {
+        animal->makeSound();
+    }
 
     return 0;
 }
