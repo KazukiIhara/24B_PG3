@@ -1,82 +1,49 @@
-#include <list>
 #include <iostream>
-#include <cstring> 
+#include <fstream>
+#include <vector>
+#include <string>
+#include <algorithm>
 
 int main() {
+    // ファイル名
+    const std::string filename = "PG3_2024_03_02.txt";
 
-	// 駅を追加
-	std::list<const char*> yamanoteStations;
-	yamanoteStations.push_back("Tokyo");
-	yamanoteStations.push_back("Kanda");
-	yamanoteStations.push_back("Akihabara");
-	yamanoteStations.push_back("Okachimachi");
-	yamanoteStations.push_back("Uneno");
-	yamanoteStations.push_back("Ugisudani");
-	yamanoteStations.push_back("Nippori");
-	yamanoteStations.push_back("Tabata");
-	yamanoteStations.push_back("Komagome");
-	yamanoteStations.push_back("Sugamo");
-	yamanoteStations.push_back("Otsuka");
-	yamanoteStations.push_back("Ikebukuro");
-	yamanoteStations.push_back("Mejiro");
-	yamanoteStations.push_back("Takadanobaba");
-	yamanoteStations.push_back("Shin-Okubo");
-	yamanoteStations.push_back("Shinjuku");
-	yamanoteStations.push_back("Yoyogi");
-	yamanoteStations.push_back("Harajuku");
-	yamanoteStations.push_back("Shibuya");
-	yamanoteStations.push_back("Ebisu");
-	yamanoteStations.push_back("Meguro");
-	yamanoteStations.push_back("Gotanda");
-	yamanoteStations.push_back("Osaki");
-	yamanoteStations.push_back("Shinagawa");
-	yamanoteStations.push_back("Tamachi");
-	yamanoteStations.push_back("Hamamatsucho");
-	yamanoteStations.push_back("Shimbashi");
-	yamanoteStations.push_back("Yurakucho");
+    // ファイル読み込み用のストリーム
+    std::ifstream inputFile(filename);
 
-	// 1970年の山手線の各駅を出力する
-	std::cout << "1970" << std::endl;
-	for (const auto& station : yamanoteStations) {
-		std::cout << station << std::endl;
-	}
+    // ファイルからデータを読み込む
+    std::vector<std::string> data;
+    std::string line;
+    if (std::getline(inputFile, line)) {
+        if (!line.empty() && line.front() == '[') {
+            line.erase(0, 1); 
+        }
+        if (!line.empty() && line.back() == ']') {
+            line.pop_back(); 
+        }
 
-	// 西日暮里駅を挿入
-	{
-		auto it = yamanoteStations.begin();
-		for (; it != yamanoteStations.end(); ++it) {
-			if (strcmp(*it, "Nippori") == 0) {
-				++it; // "Nippori"の次の位置に移動
-				yamanoteStations.insert(it, "Nishi-Nippori");
-				break;
-			}
-		}
-	}
+        size_t start = 0;
+        size_t end = line.find(',');
 
-	// 2019年の山手線の各駅を出力する
-	std::cout << "2019" << std::endl;
-	for (const auto& station : yamanoteStations) {
-		std::cout << station << std::endl;
-	}
+        // データをカンマ区切りで分割して格納
+        while (end != std::string::npos) {
+            data.push_back(line.substr(start, end - start));
+            start = end + 1;
+            end = line.find(',', start);
+        }
+        // 最後の要素を追加
+        data.push_back(line.substr(start));
+    }
+    inputFile.close();
 
-	// 高輪ゲートウェイ駅を挿入
-	{
-		auto it = yamanoteStations.begin();
-		for (; it != yamanoteStations.end(); ++it) {
-			if (strcmp(*it, "Tamachi") == 0) {
-				++it; // "Tamachi"の次の位置に移動
-				yamanoteStations.insert(it, "Takanawa Gateway");
-				break;
-			}
-		}
-	}
+    // 昇順にソート
+    std::sort(data.begin(), data.end());
 
-	// 2022年の山手線の各駅を出力する
-	std::cout << "2022" << std::endl;
-	for (const auto& station : yamanoteStations) {
-		std::cout << station << std::endl;
-	}
+    // 結果を出力
+    std::cout << "学籍番号順にソート:" << std::endl;
+    for (const auto& email : data) {
+        std::cout << email << std::endl;
+    }
 
-	// 終了
-	return 0;
+    return 0;
 }
