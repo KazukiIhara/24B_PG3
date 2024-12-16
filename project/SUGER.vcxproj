@@ -108,7 +108,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="application\command\ICommand.cpp" />
+    <ClCompile Include="application\command\Command.cpp" />
+    <ClCompile Include="application\inputHandler\InputHandler.cpp" />
     <ClCompile Include="application\myGame\MyGame.cpp" />
     <ClCompile Include="application\objects\player\Player.cpp" />
     <ClCompile Include="application\scene\factory\SceneFactory.cpp" />
@@ -188,7 +189,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application\colliderCategory\ColliderCategory.h" />
-    <ClInclude Include="application\command\ICommand.h" />
+    <ClInclude Include="application\command\Command.h" />
+    <ClInclude Include="application\inputHandler\InputHandler.h" />
     <ClInclude Include="application\myGame\MyGame.h" />
     <ClInclude Include="application\objects\player\Player.h" />
     <ClInclude Include="application\scene\factory\SceneFactory.h" />

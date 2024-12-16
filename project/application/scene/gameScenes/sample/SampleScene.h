@@ -7,6 +7,9 @@
 #include "VFX/particle/emitterController/EmitterController.h"
 #include "3d/lineController/LineController.h"
 
+#include "inputHandler/InputHandler.h"
+#include "command/Command.h"
+
 // SampleScene
 #include "objects/player/Player.h"
 
@@ -27,5 +30,10 @@ public: // 公開メンバ関数
 	void SceneStatePlayUpdate()override;
 
 private: // 非公開メンバ変数
+	// インプットハンドラー
+	std::unique_ptr<InputHander> inputHandler_;
+	// コマンドを受け取る箱
+	ICommand* iCommand_ = nullptr;
+	// プレイヤー
 	std::unique_ptr<Player> player_;
 };
