@@ -8,8 +8,7 @@
 #include "3d/lineController/LineController.h"
 
 // SampleScene
-#include "objects/pronamaChan/PronamaChan.h"
-#include "objects/teapot/Teapot.h"
+#include "objects/player/Player.h"
 
 class SampleScene :public BaseScene {
 public: // 公開メンバ関数
@@ -28,13 +27,5 @@ public: // 公開メンバ関数
 	void SceneStatePlayUpdate()override;
 
 private: // 非公開メンバ変数
-	// エンティティコントローラ
-	// プロ生ちゃん
-	std::unique_ptr<PronamaChan> pronamaChan_ = nullptr;
-	// ティーポット
-	std::unique_ptr<Teapot> teapot_ = nullptr;
-	// jeanne用のオブジェクト2Dコントローラ
-	Object2DController pronamaChanTex;
-	// Emitterコントローラ
-	EmitterController emitter_;
+	std::unique_ptr<Player> player_;
 };
